@@ -18,7 +18,6 @@ def lambda_handler(event, context):
     logger.info(event)
     httpMethod = event['httpMethod']
     path = event['path']
-    image = event['image']
 
     if httpMethod == getMethod and path == healthPath:
         # response = buildResponse(200)
