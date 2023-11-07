@@ -8,6 +8,7 @@ logger.setLevel(logging.INFO)
 getMethod = "GET"
 healthPath = "/rekognition/health"
 
+
 #main handler
 def lambda_handler(event, context):
     logger.info(event)
