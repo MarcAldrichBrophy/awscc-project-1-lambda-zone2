@@ -24,7 +24,7 @@ def lambda_handler(event, context):
         # yo do i put my code here ?
         rekognition = boto3.client('rekognition')
         image_bytes = event['image_bytes']
-        response = rekognition.detect_labels(Image={'Bytes': image_bytes})
+        response = rekognition.detect_labels(Image={'Bytes': image_bytes}, ContentType='image/png')
         labels = get_labels(response)
 
     else:
