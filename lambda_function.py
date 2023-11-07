@@ -1,6 +1,7 @@
 import logging
 import json
 import boto3
+import base64
 from botocore.client import Config
 from customEncoder import CustomEncoder
 
@@ -22,8 +23,9 @@ def lambda_handler(event, context):
     if httpMethod == getMethod and path == healthPath:
         # response = buildResponse(200)
         # yo do i put my code here ?
+        with open('\image.PNG', 'rb') as image_file:
+            image_bytes = base64.b64encode(image_file*read()).decode('utf-8')
         rekognition = boto3.client('rekognition')
-        image_bytes = event['image_bytes']
         response = rekognition.detect_labels(Image={'Bytes': image_bytes})
         labels = get_labels(response)
 
