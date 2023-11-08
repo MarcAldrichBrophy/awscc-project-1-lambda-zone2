@@ -21,18 +21,20 @@ def lambda_handler(event, context):
     path = event['path']
 
     if httpMethod == getMethod and path == healthPath:
-        # response = buildResponse(200)
+
         # yo do i put my code here ?
         with open('\image.PNG', 'rb') as image_file: #CHANGE THIS DIRECTORY LATER, upload image to S3 Bucket?
-            image_bytes = base64.b64encode(image_file*read()).decode('utf-8')
+            image_bytes = base64.b64encode(image_file.read()).decode('utf-8')
+
         rekognition = boto3.client('rekognition')
         response = rekognition.detect_labels(Image={'Bytes': image_bytes})
         labels = get_labels(response)
 
-    else:
-        response = buildResponse(404, 'Not Found')
+        return buildResponse(200)
     
-    return response
+    else:
+        return buildResponse(404, 'Not Found')
+    
 
 # Response builder.
 def buildResponse(statusCode, body = None):
