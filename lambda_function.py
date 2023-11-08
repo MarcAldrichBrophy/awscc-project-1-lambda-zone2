@@ -22,8 +22,7 @@ def lambda_handler(event, context):
 
     if httpMethod == getMethod and path == healthPath:
 
-        # yo do i put my code here ?
-        with open('Amazon S3\Buckets\project-1-code-zone2\image.PNG', 'rb') as image_file:
+        with open('s3://project-1-code-zone2/image.PNG', 'rb') as image_file:
             image_bytes = base64.b64encode(image_file.read()).decode('utf-8')
 
         rekognition = boto3.client('rekognition')
