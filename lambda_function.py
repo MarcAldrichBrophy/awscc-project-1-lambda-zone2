@@ -19,7 +19,7 @@ def get_labels(response):
     labels = []
 
     for label in response['Labels']:
-        if (float(response['Confidence']) >= 75):
+        if (float(label['Confidence']) >= 75):
             labels.append({
                 'Name': label['Name'],
                 'Confidence': label['Confidence']
