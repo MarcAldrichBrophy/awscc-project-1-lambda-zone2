@@ -4,6 +4,7 @@ import boto3
 import base64
 import io
 import imghdr
+import uuid
 from botocore.client import Config
 from customEncoder import CustomEncoder
 
@@ -67,9 +68,15 @@ def lambda_handler(event, context):
             Fileobj = io.BytesIO(image_data),
             Bucket = 'project-1-datalake',
             Key = key,
+        )
+
+        s3.put_object_tagging(
+            Bucket = 'project-1-datalake',
+            Key = key,
             Tagging = {
                 'Tagset': [
-                    {'Key': label, 'Value': str(confidence)} for label, confidence in zip(labels[::2], labels[1::2])
+                    {'Key': label, 'Value': str(confidence)} 
+                    for label, confidence in zip(labels[::2], labels[1::2])
                 ]
             }
         )
