@@ -3,6 +3,7 @@ import json
 import boto3
 import base64
 import io
+import imghdr
 from botocore.client import Config
 from customEncoder import CustomEncoder
 
@@ -48,15 +49,30 @@ def lambda_handler(event, context):
 
         labels_json = json.dumps(labels)
 
-        #s3 upload:
-        s3.upload_fileobj(io.BytesIO(image_data), 'harryPotter', 'harry')
-        s3.put_object_tagging(Bucket = 'harryPotter', Key = harry, Taggingt={
-            'TagSet': [
-                {'Key': label, 'Value': str(confidence)} for label, confidence in zip(labels[::2], labels[1::2])
-            ]
-        })
 
+        #S3 UPLOAD:
 
+        #detect file type
+        image_type = imghdr.what(None, h = image_base64)
+        if image_type == 'jpeg':
+            file_ext = '.jpeg'
+        elif image_type == 'png':
+            file_ext = '.png'
+
+        #generate key
+        key = uuid.uuid4().hex + file_ext
+
+        #upload image
+        s3.upload_fileobj(
+            Fileobj = image_base64,
+            Bucket = 'project-1-datalake',
+            Key = key,
+            Tagging = {
+                'Tagset': [
+                    {'Key': label, 'Value': str(confidence)} for label, confidence in zip(labels[::2], labels[1::2])
+                ]
+            }
+        )
 
         return buildResponse(200, result)
     
