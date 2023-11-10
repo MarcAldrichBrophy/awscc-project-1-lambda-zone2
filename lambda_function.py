@@ -17,8 +17,11 @@ rekognition = boto3.client('rekognition')
 
 def get_labels(response):
     labels = []
-    return [dict(Name=labels['Name'], Confidence=labels['Confidence'])
-        for label in response['Labels'] if (float(label['Confidence']) >= 75)]
+    for label in response['Labels']:
+        if (float(label['Confidence']) >= 75):
+            labels.append(label['Name'])
+            labels.append(label['Confidence'])
+    return labels
 
 
 #main handler
