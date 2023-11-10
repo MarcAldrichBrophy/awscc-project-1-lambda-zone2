@@ -53,7 +53,7 @@ def lambda_handler(event, context):
         #S3 UPLOAD:
 
         #detect file type
-        image_type = imghdr.what(None, h = image_base64)
+        image_type = imghdr.what(None, h = image_data)
         if image_type == 'jpeg':
             file_ext = '.jpeg'
         elif image_type == 'png':
@@ -64,7 +64,7 @@ def lambda_handler(event, context):
 
         #upload image
         s3.upload_fileobj(
-            Fileobj = image_base64,
+            Fileobj = io.BytesIO(image_data),
             Bucket = 'project-1-datalake',
             Key = key,
             Tagging = {
