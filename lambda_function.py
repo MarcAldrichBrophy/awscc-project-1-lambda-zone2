@@ -5,6 +5,7 @@ import base64
 import io
 from botocore.client import Config
 from customEncoder import CustomEncoder
+from PIL import Image
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
