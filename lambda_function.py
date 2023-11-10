@@ -19,10 +19,11 @@ def get_labels(response):
     labels = []
 
     for label in response['Labels']:
-        labels.append({
-            'Name': label['Name'],
-            'Confidence': label['Confidence']
-        })
+        if (float(response['Confidence']) >= 75):
+            labels.append({
+                'Name': label['Name'],
+                'Confidence': label['Confidence']
+            })
     return labels
 
 
@@ -48,7 +49,7 @@ def lambda_handler(event, context):
         labels = get_labels(response)
         result = {'labels': labels}
 
-        labels_json = json.dumps()
+        labels_json = json.dumps(labels)
         
         return buildResponse(200, result)
     
