@@ -15,6 +15,16 @@ getMethod = "GET"
 healthPath = "/rekognition/health"
 rekognition = boto3.client('rekognition')
 
+def get_labels(response):
+    labels = []
+
+    for label in response['Labels']:
+        labels.append({
+            'Name': label['Name'],
+            'Confidence': label['Confidence']
+        })
+    return labels
+
 
 #main handler
 def lambda_handler(event, context):
@@ -40,7 +50,7 @@ def lambda_handler(event, context):
 
         labels_json = json.dumps()
         
-        return buildResponse(200, labels)
+        return buildResponse(200, result)
     
     else:
         return buildResponse(404, 'Not Found')
