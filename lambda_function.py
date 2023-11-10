@@ -47,7 +47,17 @@ def lambda_handler(event, context):
         result = {'labels': labels}
 
         labels_json = json.dumps(labels)
-        
+
+        #s3 upload:
+        s3.upload_fileobj(io.BytesIO(image_data), 'harryPotter', 'harry')
+        s3.put_object_tagging(Bucket = 'harryPotter', Key = harry, Taggingt={
+            'TagSet': [
+                {'Key': label, 'Value': str(confidence)} for label, confidence in zip(labels[::2], labels[1::2])
+            ]
+        })
+
+
+
         return buildResponse(200, result)
     
     else:
