@@ -5,7 +5,6 @@ import base64
 import io
 from botocore.client import Config
 from customEncoder import CustomEncoder
-from PIL import Image
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -15,7 +14,6 @@ s3 = boto3.client('s3')
 getMethod = "GET"
 healthPath = "/rekognition/health"
 rekognition = boto3.client('rekognition')
-
 
 
 #main handler
@@ -32,7 +30,7 @@ def lambda_handler(event, context):
         image_data = base64.b64decode(image_base64)
 
         #convert
-        image = Image.open(io.BytesIO(image_data))
+        image = {'Bytes': image_data}
 
         #run rekognition detect_faces API
         response = rekognition.detect_labels(Image={'Bytes': image_data})
