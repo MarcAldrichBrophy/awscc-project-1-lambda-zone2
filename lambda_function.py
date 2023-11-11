@@ -54,11 +54,17 @@ def lambda_handler(event, context):
 
         #run rekognition detect_labels API
         response = rekognition.detect_labels(Image={'Bytes': image_data})
-        #detect text
-        textResponse = rekognition.detect_labels(Image={'Bytes': image_data})
+        try:
+            #detect text
+            textResponse = rekognition.detect_labels(Image={'Bytes': image_data})
 
-        #get text
-        text = textResponse['TextDetections']
+            #get text
+            text = textResponse['TextDetections']
+        except KeyError as e:
+            logger.error("KeyError: {}".format(e))
+            text = None
+
+        #add detected text (if any) to output
         result['text'] = text
 
 
