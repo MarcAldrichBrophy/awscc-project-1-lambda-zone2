@@ -11,6 +11,8 @@ from customEncoder import CustomEncoder
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 s3 = boto3.client('s3')
+#for text detection:
+output = {}
 
 
 getMethod = "GET"
@@ -56,20 +58,23 @@ def lambda_handler(event, context):
         response = rekognition.detect_labels(Image={'Bytes': image_data})
         try:
             #detect text
-            textResponse = rekognition.detect_labels(Image={'Bytes': image_data})
+            textResponse = rekognition.detect_text(Image={'Bytes': image_data})
 
             #get text
             text = textResponse['TextDetections']
+            output['text'] = text
         except KeyError as e:
             logger.error("KeyError: {}".format(e))
             text = None
 
-        #add detected text (if any) to output
-        result['text'] = text
-
 
         labels = get_labels(response)
-        result = {'labels': labels}
+        
+        #if text is in the image, include the text in the output.
+        if 'text' in output.keys() and output['text']:
+            result = {'text': text, 'labels': labels}
+        else:
+            result = {'labels': labels}
 
         labels_json = json.dumps(labels)
 
