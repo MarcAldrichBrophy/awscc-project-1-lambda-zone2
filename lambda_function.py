@@ -19,6 +19,7 @@ rekognition = boto3.client('rekognition')
 
 def get_labels(response):
     labels = []
+    #bucket can only hold up to 10 labels!
     size = len(response['Labels'])
     if size > 10:
         for i in range(10):
@@ -28,7 +29,7 @@ def get_labels(response):
                 labels.append(label['Confidence'])
         return labels
     else:
-        for label in response['Lables']:
+        for label in response['Labels']:
             if (float(label['Confidence']) >= 75):
                 labels.append(label['Name'])
                 labels.append(label['Confidence'])
@@ -79,6 +80,7 @@ def lambda_handler(event, context):
             Key = key,
         )
 
+        #add tags to image
         s3.put_object_tagging(
             Bucket = 'project-1-datalake',
             Key = key,
