@@ -62,6 +62,7 @@ def lambda_handler(event, context):
 
             #get text
             text = textResponse['TextDetections']
+            text = [text_detection['DetectedText'] for text_detection in text]
             output['text'] = text
         except KeyError as e:
             logger.error("KeyError: {}".format(e))
@@ -69,16 +70,14 @@ def lambda_handler(event, context):
 
 
         labels = get_labels(response)
-        '''
         #if text is in the image, include the text in the output.
         if 'text' in output.keys() and output['text']:
-            result = {'text': text, 'labels': labels}
+            result = {'text': output['text'], 'labels': labels}
         else:
             result = {'labels': labels}
 
         labels_json = json.dumps(labels)
-        '''
-        result = {'text': text, 'labels': labels}
+        
 
         #S3 UPLOAD:
 
