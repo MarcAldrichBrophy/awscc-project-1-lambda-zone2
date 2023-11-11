@@ -46,15 +46,22 @@ def lambda_handler(event, context):
 
     if httpMethod == getMethod and path == healthPath:
 
-        #decode
+        #decode image
         image_data = base64.b64decode(image_base64)
 
-        #convert
+        #convert image
         image = {'Bytes': image_data}
 
-        #run rekognition detect_faces API
+        #run rekognition detect_labels API
         response = rekognition.detect_labels(Image={'Bytes': image_data})
-    
+        #detect text
+        textResponse = rekognition.detect_labels(Image={'Bytes': image_data})
+
+        #get text
+        text = textResponse['TextDetections']
+        result['text'] = text
+
+
         labels = get_labels(response)
         result = {'labels': labels}
 
