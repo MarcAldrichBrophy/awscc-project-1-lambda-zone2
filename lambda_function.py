@@ -59,14 +59,11 @@ def lambda_handler(event, context):
         try:
             #detect text
             textResponse = rekognition.detect_text(Image={'Bytes': image_data})
-
             text = textResponse['TextDetections'][0]['DetectedText']
-
             output['text'] = text
-        except KeyError as e:
-            logger.error("KeyError: {}".format(e))
+        except IndexError:
+            logger.info("No text detected")
             text = None
-
 
         labels = get_labels(response)
         #if text is in the image, include the text in the output.
