@@ -14,9 +14,11 @@ s3 = boto3.client('s3')
 #for text detection:
 output = {}
 
-
 getMethod = "GET"
-healthPath = "/rekognition/health"
+postMethod = "POST"
+
+rootPath = "/rekognition"
+healthPath = rootPath + "/health"
 rekognition = boto3.client('rekognition')
 
 def get_labels(response):
@@ -44,10 +46,11 @@ def lambda_handler(event, context):
     logger.info(event)
     httpMethod = event['httpMethod']
     path = event['path']
-    image_base64 = event['imageBase64']
-
+    
     if httpMethod == getMethod and path == healthPath:
-
+        return buildResponse(200, 'Health OK')
+    elif httpMethod == postMethod and path == rootPath:
+        image_base64 = json.loads(event['body'])['imageBase64']
         #decode image
         image_data = base64.b64decode(image_base64)
 
@@ -67,10 +70,10 @@ def lambda_handler(event, context):
 
         labels = get_labels(response)
         #if text is in the image, include the text in the output.
-        if 'text' in output.keys() and output['text']:
-            result = {'text': output['text'], 'labels': labels}
-        else:
-            result = {'labels': labels}
+        # if 'text' in output.keys() and output['text']:
+        #     result = {'text': output['text'], 'labels': labels}
+        # else:
+        result = {'labels': labels}
 
         labels_json = json.dumps(labels)
         
